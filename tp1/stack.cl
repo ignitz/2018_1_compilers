@@ -1,127 +1,126 @@
-class Stack {
+(* Sua implementação deverá estar neste arquivo.  *)
 
-   isNil() : Bool { true };
-   head()  : String { { abort(); ""; } };
-   tail()  : Stack { { abort(); self; } };
-   cons(i : String) : Stack {
-      (new Cons).init(i, self)
-   };
+class StackCommand
+{
+    top : String; -- Topo da pilha.
+    rest : StackCommand; -- Resto da pilha.
 
-};
+    init(s : String) : Object { top <- s };
 
-class Cons inherits Stack {
+    initRest(stcmd : StackCommand) : Object { rest <- stcmd };
 
-   car : String;
-   cdr : Stack;
-   isNil() : Bool { false };
-   head()  : String { car };
-   tail()  : Stack { cdr };
-   init(i : String, rest : Stack) : Stack {
-      {
-     car <- i;
-     cdr <- rest;
-     self;
-      }
-   };
+    getCmd() : String { top };
 
+    getNext() : StackCommand { rest };
 };
 
 class Main inherits IO {
-    my_stack: Stack;
+--------------------------------------------------------------------------
+-- -- -- -- -- -- -- Declaração das variáveis auxiliares -- -- -- -- -- --
+--------------------------------------------------------------------------
+
+    sizeStack : Int;
 
     input : String;
+    top : String;
+    top2 : String;
+    aux : String;
 
-    a2i : A2I;
+    cmd : StackCommand;
+    cmd_top : StackCommand;
+    cmd_aux : StackCommand;
 
-    print_stack(l : Stack) : Object {
-      if l.isNil() then out_string("")
-                   else {
-               out_string(l.head());
-               out_string("\n");
-               print_stack(l.tail());
-                }
-      fi
-    };
-    
-    push(s : String) : Object
+    converter : A2I;
+
+------------------------------------------------------------------------
+-- -- -- -- -- -- -- Declaração dos métodos auxiliares -- -- -- -- -- --
+------------------------------------------------------------------------
+
+    --`Percorre a pilha imprimindo os elementos
+    printStack() : Object
     {
-        my_stack <- my_stack.cons(s)
-    };
-
-    pop() : String {
-        (let top : String <- my_stack.head() in
-            {
-                my_stack <- my_stack.tail();
-                top;
-            }
-        )
-    };
-
-    eval() : Object {
-        (let top : String <- my_stack.head() in
-            if top = "+" then
-            {
-                pop();
-                (let x : String <- pop() in
-                    (let y : String <- pop() in
-                        {
-                            a2i <- new A2I;
-                            push(a2i.i2a(a2i.a2i(x) + a2i.a2i(y)));
-                        }
-                    )
-                );
-            }
-            else if top = "s" then
-            {
-                pop();
-                (let x : String <- pop() in
-                    (let y : String <- pop() in
-                        {
-                            push(x);
-                            push(y);
-                        }
-                    )
-                );
-            }
-            else 
-            {
-                out_string(top);
-                out_string("\n");
-            }
-            fi fi
-        )
-    };
-
-    prompt() : String {
         {
-            out_string(">");
-            in_string();
+            cmd_aux <- cmd_top;
+            while not isvoid cmd_aux loop
+            {
+                out_string(cmd_aux.getCmd());
+                newline();
+                cmd_aux <- cmd_aux.getNext();
+            } pool;
         }
     };
 
+    evaluateStack() : Object
+    {
+        {
+            converter <- new A2I;
+            aux <- popStack();
+            if aux = "+" then -- Soma os dois primeiros elementos da pilha.
+            {
+                top <- popStack();
+                top2 <- popStack();
+                pushStack(converter.i2a( converter.a2i(top) + converter.a2i(top2) ));
+            }
+            else if aux = "s" then -- Troca os dois primeiros elementos da pilha.
+            {
+                top <- popStack();
+                top2 <- popStack();
+                pushStack(top);
+                pushStack(top2);
+            }
+            else "NÃO FAZ NADA" -- Se não for '+' e nem 's' não faz nada.
+            fi fi;
+        }
+    };
+
+    pushStack(s : String) : Object
+    {
+        {
+            sizeStack <- sizeStack + 1; -- Incrementa o contador.
+            cmd <- new StackCommand;
+            cmd.init(s);
+            if sizeStack = 1 then cmd_top <- cmd
+            else
+            {
+                cmd.initRest(cmd_top); -- "Empurra" a pilha.
+                cmd_top <- cmd; -- Insere 's' como primeiro elemento.
+            }
+            fi;
+        }
+    };
+
+    popStack() : String
+    {
+        {
+            sizeStack = sizeStack - 1; -- Decrementa o contador.
+            aux <- cmd_top.getCmd(); -- Pega a string do comando.
+            cmd_top <- cmd_top.getNext(); -- Remove da pilha transformando o next em novo topo.
+            aux; -- Retorna a string do comando.
+        }
+    };
+
+    -- Apenas para facilitar a entrada de dados.
+    prompt() : String { { out_string(">"); in_string(); } };
+
+    newline() : Object { out_string("\n") };
+
+------------------------------------------------------------------------
+-- -- -- -- -- -- -- -- -- -- Função Main -- -- -- -- -- -- -- -- -- --
+------------------------------------------------------------------------
 
     main() : Object
     {
         {
-            my_stack <- new Stack;
-
-            input <- prompt();
-            while (not input = "x") loop
-            {
-                if input = "e" then eval()
-                else if input = "d" then print_stack(my_stack)
-                else push(input)
+            sizeStack <- 0; -- Inicializa o contador com 0.
+            input <- prompt(); -- Lê a primeira entrada.
+            while not input = "x" loop -- Enquanto a entrada não for X.
+            { -- Verifica qual tipo de comando é.
+                if input = "d" then printStack()
+                else if input = "e" then evaluateStack()
+                else pushStack(input) -- Se não é X, D ou E, então empilha.
                 fi fi;
-
-                input <- prompt();                
+                input <- prompt(); -- Lê a entrada novamente.
             } pool;
-
-            (* while (not my_stack.isNil()) loop
-            {
-                print_stack(my_stack);
-                my_stack <- my_stack.tail();
-            }
-            pool;*)
         }
     };
 };
