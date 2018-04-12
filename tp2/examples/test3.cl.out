@@ -1,0 +1,806 @@
+#name "test3.cl"
+#45 CLASS
+#45 TYPEID Board
+#45 INHERITS
+#45 TYPEID IO
+#45 '{'
+#47 OBJECTID rows
+#47 ':'
+#47 TYPEID Int
+#47 ';'
+#48 OBJECTID columns
+#48 ':'
+#48 TYPEID Int
+#48 ';'
+#49 OBJECTID board_size
+#49 ':'
+#49 TYPEID Int
+#49 ';'
+#51 OBJECTID size_of_board
+#51 '('
+#51 OBJECTID initial
+#51 ':'
+#51 TYPEID String
+#51 ')'
+#51 ':'
+#51 TYPEID Int
+#51 '{'
+#52 OBJECTID initial
+#52 '.'
+#52 OBJECTID length
+#52 '('
+#52 ')'
+#53 '}'
+#53 ';'
+#55 OBJECTID board_init
+#55 '('
+#55 OBJECTID start
+#55 ':'
+#55 TYPEID String
+#55 ')'
+#55 ':'
+#55 TYPEID SELF_TYPE
+#55 '{'
+#56 '('
+#56 LET
+#56 OBJECTID size
+#56 ':'
+#56 TYPEID Int
+#56 ASSIGN
+#56 OBJECTID size_of_board
+#56 '('
+#56 OBJECTID start
+#56 ')'
+#56 IN
+#57 '{'
+#58 IF
+#58 OBJECTID size
+#58 '='
+#58 INT_CONST 15
+#58 THEN
+#59 '{'
+#60 OBJECTID rows
+#60 ASSIGN
+#60 INT_CONST 3
+#60 ';'
+#61 OBJECTID columns
+#61 ASSIGN
+#61 INT_CONST 5
+#61 ';'
+#62 OBJECTID board_size
+#62 ASSIGN
+#62 OBJECTID size
+#62 ';'
+#63 '}'
+#64 ELSE
+#64 IF
+#64 OBJECTID size
+#64 '='
+#64 INT_CONST 16
+#64 THEN
+#65 '{'
+#66 OBJECTID rows
+#66 ASSIGN
+#66 INT_CONST 4
+#66 ';'
+#67 OBJECTID columns
+#67 ASSIGN
+#67 INT_CONST 4
+#67 ';'
+#68 OBJECTID board_size
+#68 ASSIGN
+#68 OBJECTID size
+#68 ';'
+#69 '}'
+#70 ELSE
+#70 IF
+#70 OBJECTID size
+#70 '='
+#70 INT_CONST 20
+#70 THEN
+#71 '{'
+#72 OBJECTID rows
+#72 ASSIGN
+#72 INT_CONST 4
+#72 ';'
+#73 OBJECTID columns
+#73 ASSIGN
+#73 INT_CONST 5
+#73 ';'
+#74 OBJECTID board_size
+#74 ASSIGN
+#74 OBJECTID size
+#74 ';'
+#75 '}'
+#76 ELSE
+#76 IF
+#76 OBJECTID size
+#76 '='
+#76 INT_CONST 21
+#76 THEN
+#77 '{'
+#78 OBJECTID rows
+#78 ASSIGN
+#78 INT_CONST 3
+#78 ';'
+#79 OBJECTID columns
+#79 ASSIGN
+#79 INT_CONST 7
+#79 ';'
+#80 OBJECTID board_size
+#80 ASSIGN
+#80 OBJECTID size
+#80 ';'
+#81 '}'
+#82 ELSE
+#82 IF
+#82 OBJECTID size
+#82 '='
+#82 INT_CONST 25
+#82 THEN
+#83 '{'
+#84 OBJECTID rows
+#84 ASSIGN
+#84 INT_CONST 5
+#84 ';'
+#85 OBJECTID columns
+#85 ASSIGN
+#85 INT_CONST 5
+#85 ';'
+#86 OBJECTID board_size
+#86 ASSIGN
+#86 OBJECTID size
+#86 ';'
+#87 '}'
+#88 ELSE
+#88 IF
+#88 OBJECTID size
+#88 '='
+#88 INT_CONST 28
+#88 THEN
+#89 '{'
+#90 OBJECTID rows
+#90 ASSIGN
+#90 INT_CONST 7
+#90 ';'
+#91 OBJECTID columns
+#91 ASSIGN
+#91 INT_CONST 4
+#91 ';'
+#92 OBJECTID board_size
+#92 ASSIGN
+#92 OBJECTID size
+#92 ';'
+#93 '}'
+#94 ELSE
+#95 '{'
+#96 OBJECTID rows
+#96 ASSIGN
+#96 INT_CONST 5
+#96 ';'
+#97 OBJECTID columns
+#97 ASSIGN
+#97 INT_CONST 5
+#97 ';'
+#98 OBJECTID board_size
+#98 ASSIGN
+#98 OBJECTID size
+#98 ';'
+#99 '}'
+#100 FI
+#100 FI
+#100 FI
+#100 FI
+#100 FI
+#100 FI
+#100 ';'
+#101 OBJECTID self
+#101 ';'
+#102 '}'
+#103 ')'
+#104 '}'
+#104 ';'
+#106 '}'
+#106 ';'
+#110 CLASS
+#110 TYPEID CellularAutomaton
+#110 INHERITS
+#110 TYPEID Board
+#110 '{'
+#111 OBJECTID population_map
+#111 ':'
+#111 TYPEID String
+#111 ';'
+#113 OBJECTID init
+#113 '('
+#113 OBJECTID map
+#113 ':'
+#113 TYPEID String
+#113 ')'
+#113 ':'
+#113 TYPEID SELF_TYPE
+#113 '{'
+#114 '{'
+#115 OBJECTID population_map
+#115 ASSIGN
+#115 OBJECTID map
+#115 ';'
+#116 OBJECTID board_init
+#116 '('
+#116 OBJECTID map
+#116 ')'
+#116 ';'
+#117 OBJECTID self
+#117 ';'
+#118 '}'
+#119 '}'
+#119 ';'
+#124 OBJECTID print
+#124 '('
+#124 ')'
+#124 ':'
+#124 TYPEID SELF_TYPE
+#124 '{'
+#126 '('
+#126 LET
+#126 OBJECTID i
+#126 ':'
+#126 TYPEID Int
+#126 ASSIGN
+#126 INT_CONST 0
+#126 IN
+#127 '('
+#127 LET
+#127 OBJECTID num
+#127 ':'
+#127 TYPEID Int
+#127 ASSIGN
+#127 OBJECTID board_size
+#127 IN
+#128 '{'
+#129 OBJECTID out_string
+#129 '('
+#129 STR_CONST "\n"
+#129 ')'
+#129 ';'
+#130 WHILE
+#130 OBJECTID i
+#130 '<'
+#130 OBJECTID num
+#130 LOOP
+#131 '{'
+#132 OBJECTID out_string
+#132 '('
+#132 OBJECTID population_map
+#132 '.'
+#132 OBJECTID substr
+#132 '('
+#132 OBJECTID i
+#132 ','
+#132 OBJECTID columns
+#132 ')'
+#132 ')'
+#132 ';'
+#133 OBJECTID out_string
+#133 '('
+#133 STR_CONST "\n"
+#133 ')'
+#133 ';'
+#134 OBJECTID i
+#134 ASSIGN
+#134 OBJECTID i
+#134 '+'
+#134 OBJECTID columns
+#134 ';'
+#135 '}'
+#136 POOL
+#136 ';'
+#137 OBJECTID out_string
+#137 '('
+#137 STR_CONST "\n"
+#137 ')'
+#137 ';'
+#138 OBJECTID self
+#138 ';'
+#139 '}'
+#140 ')'
+#140 ')'
+#141 '}'
+#141 ';'
+#143 OBJECTID num_cells
+#143 '('
+#143 ')'
+#143 ':'
+#143 TYPEID Int
+#143 '{'
+#144 OBJECTID population_map
+#144 '.'
+#144 OBJECTID length
+#144 '('
+#144 ')'
+#145 '}'
+#145 ';'
+#147 OBJECTID cell
+#147 '('
+#147 OBJECTID position
+#147 ':'
+#147 TYPEID Int
+#147 ')'
+#147 ':'
+#147 TYPEID String
+#147 '{'
+#148 IF
+#148 OBJECTID board_size
+#148 '-'
+#148 INT_CONST 1
+#148 '<'
+#148 OBJECTID position
+#148 THEN
+#149 STR_CONST " "
+#150 ELSE
+#151 OBJECTID population_map
+#151 '.'
+#151 OBJECTID substr
+#151 '('
+#151 OBJECTID position
+#151 ','
+#151 INT_CONST 1
+#151 ')'
+#152 FI
+#153 '}'
+#153 ';'
+#155 OBJECTID north
+#155 '('
+#155 OBJECTID position
+#155 ':'
+#155 TYPEID Int
+#155 ')'
+#155 ':'
+#155 TYPEID String
+#155 '{'
+#156 IF
+#156 '('
+#156 OBJECTID position
+#156 '-'
+#156 OBJECTID columns
+#156 ')'
+#156 '<'
+#156 INT_CONST 0
+#156 THEN
+#157 STR_CONST " "
+#158 ELSE
+#159 OBJECTID cell
+#159 '('
+#159 OBJECTID position
+#159 '-'
+#159 OBJECTID columns
+#159 ')'
+#160 FI
+#161 '}'
+#161 ';'
+#163 OBJECTID south
+#163 '('
+#163 OBJECTID position
+#163 ':'
+#163 TYPEID Int
+#163 ')'
+#163 ':'
+#163 TYPEID String
+#163 '{'
+#164 IF
+#164 OBJECTID board_size
+#164 ERROR "^"
+#164 '('
+#164 OBJECTID position
+#164 '+'
+#164 OBJECTID columns
+#164 ')'
+#164 THEN
+#165 STR_CONST " "
+#166 ELSE
+#167 OBJECTID cell
+#167 '('
+#167 OBJECTID position
+#167 '+'
+#167 OBJECTID columns
+#167 ')'
+#168 FI
+#169 '}'
+#169 ';'
+#171 OBJECTID east
+#171 '('
+#171 OBJECTID position
+#171 ':'
+#171 TYPEID Int
+#171 ')'
+#171 ':'
+#171 TYPEID String
+#171 '{'
+#172 IF
+#172 '('
+#172 '('
+#172 '('
+#172 OBJECTID position
+#172 '+'
+#172 INT_CONST 1
+#172 ')'
+#172 '/'
+#172 OBJECTID columns
+#172 ')'
+#172 '*'
+#172 OBJECTID columns
+#172 ')'
+#172 '='
+#172 '('
+#172 OBJECTID position
+#172 '+'
+#172 INT_CONST 1
+#172 ')'
+#172 THEN
+#173 STR_CONST " "
+#174 ELSE
+#175 OBJECTID cell
+#175 '('
+#175 OBJECTID position
+#175 '+'
+#175 INT_CONST 1
+#175 ')'
+#176 FI
+#177 '}'
+#177 ';'
+#179 OBJECTID west
+#179 '('
+#179 OBJECTID position
+#179 ':'
+#179 TYPEID Int
+#179 ')'
+#179 ':'
+#179 TYPEID String
+#179 '{'
+#180 IF
+#180 OBJECTID position
+#180 '='
+#180 INT_CONST 0
+#180 THEN
+#181 ERROR "'"
+#181 ERROR "'"
+#182 ELSE
+#183 IF
+#183 '('
+#183 '('
+#183 OBJECTID position
+#183 '/'
+#183 OBJECTID columns
+#183 ')'
+#183 '*'
+#183 OBJECTID columns
+#183 ')'
+#183 '='
+#183 OBJECTID position
+#183 THEN
+#184 STR_CONST " "
+#185 ELSE
+#186 OBJECTID cell
+#186 '('
+#186 OBJECTID position
+#186 '-'
+#186 INT_CONST 1
+#186 ')'
+#187 FI
+#187 FI
+#188 '}'
+#188 ';'
+#190 OBJECTID northwest
+#190 '('
+#190 OBJECTID position
+#190 ':'
+#190 TYPEID Int
+#190 ')'
+#190 ':'
+#190 TYPEID String
+#190 '{'
+#191 IF
+#191 '('
+#191 OBJECTID position
+#191 '-'
+#191 OBJECTID columns
+#191 ')'
+#191 '<'
+#191 INT_CONST 0
+#191 THEN
+#192 STR_CONST " "
+#193 ELSE
+#193 IF
+#193 '('
+#193 '('
+#193 OBJECTID position
+#193 '/'
+#193 OBJECTID columns
+#193 ')'
+#193 '*'
+#193 OBJECTID columns
+#193 ')'
+#193 '='
+#193 OBJECTID position
+#193 THEN
+#194 STR_CONST " "
+#195 ELSE
+#196 OBJECTID north
+#196 '('
+#196 OBJECTID position
+#196 '-'
+#196 INT_CONST 1
+#196 ')'
+#197 FI
+#197 FI
+#198 '}'
+#198 ';'
+#200 OBJECTID northeast
+#200 '('
+#200 OBJECTID position
+#200 ':'
+#200 TYPEID Int
+#200 ')'
+#200 ':'
+#200 TYPEID String
+#200 '{'
+#201 IF
+#201 '('
+#201 OBJECTID position
+#201 '-'
+#201 OBJECTID columns
+#201 ')'
+#201 '<'
+#201 INT_CONST 0
+#201 THEN
+#202 STR_CONST " "
+#203 ELSE
+#203 IF
+#203 '('
+#203 '('
+#203 '('
+#203 OBJECTID position
+#203 '+'
+#203 INT_CONST 1
+#203 ')'
+#203 '/'
+#203 OBJECTID columns
+#203 ')'
+#203 '*'
+#203 OBJECTID columns
+#203 ')'
+#203 '='
+#203 '('
+#203 OBJECTID position
+#203 '+'
+#203 INT_CONST 1
+#203 ')'
+#203 THEN
+#204 STR_CONST " "
+#205 ELSE
+#206 OBJECTID north
+#206 '('
+#206 OBJECTID position
+#206 '+'
+#206 INT_CONST 1
+#206 ')'
+#207 FI
+#207 FI
+#208 '}'
+#208 ';'
+#210 OBJECTID southeast
+#210 '('
+#210 OBJECTID position
+#210 ':'
+#210 TYPEID Int
+#210 ')'
+#210 ':'
+#210 TYPEID String
+#210 '{'
+#211 IF
+#211 OBJECTID board_size
+#211 '<'
+#211 '('
+#211 OBJECTID position
+#211 '+'
+#211 OBJECTID columns
+#211 ')'
+#211 THEN
+#212 STR_CONST " "
+#213 ELSE
+#213 IF
+#213 '('
+#213 '('
+#213 '('
+#213 OBJECTID position
+#213 '+'
+#213 INT_CONST 1
+#213 ')'
+#213 '/'
+#213 OBJECTID columns
+#213 ')'
+#213 '*'
+#213 OBJECTID columns
+#213 ')'
+#213 '='
+#213 '('
+#213 OBJECTID position
+#213 '+'
+#213 INT_CONST 1
+#213 ')'
+#213 THEN
+#214 STR_CONST " "
+#215 ELSE
+#216 OBJECTID south
+#216 '('
+#216 OBJECTID position
+#216 '+'
+#216 INT_CONST 1
+#216 ')'
+#217 FI
+#217 FI
+#218 '}'
+#218 ';'
+#220 OBJECTID southwest
+#220 '('
+#220 OBJECTID position
+#220 ':'
+#220 TYPEID Int
+#220 ')'
+#220 ':'
+#220 TYPEID String
+#220 '{'
+#221 IF
+#221 OBJECTID board_size
+#221 '<'
+#221 '('
+#221 OBJECTID position
+#221 '+'
+#221 OBJECTID columns
+#221 ')'
+#221 THEN
+#222 STR_CONST " "
+#223 ELSE
+#223 IF
+#223 '('
+#223 '('
+#223 OBJECTID position
+#223 '/'
+#223 OBJECTID columns
+#223 ')'
+#223 '*'
+#223 OBJECTID columns
+#223 ')'
+#223 '='
+#223 OBJECTID position
+#223 THEN
+#224 STR_CONST " "
+#225 ELSE
+#226 OBJECTID south
+#226 '('
+#226 OBJECTID position
+#226 '-'
+#226 INT_CONST 1
+#226 ')'
+#227 FI
+#227 FI
+#228 '}'
+#228 ';'
+#230 OBJECTID neighbors
+#230 '('
+#230 OBJECTID position
+#230 ':'
+#230 TYPEID Int
+#230 ')'
+#230 ':'
+#230 TYPEID Int
+#230 '{'
+#231 '{'
+#232 IF
+#232 OBJECTID north
+#232 '('
+#232 OBJECTID position
+#232 ')'
+#232 '='
+#232 STR_CONST "X"
+#232 THEN
+#232 INT_CONST 1
+#232 ELSE
+#232 INT_CONST 0
+#232 FI
+#233 '+'
+#233 IF
+#233 OBJECTID south
+#233 '('
+#233 OBJECTID position
+#233 ')'
+#233 '='
+#233 STR_CONST "X"
+#233 THEN
+#233 INT_CONST 1
+#233 ELSE
+#233 INT_CONST 0
+#233 FI
+#234 '+'
+#234 IF
+#234 OBJECTID east
+#234 '('
+#234 OBJECTID position
+#234 ')'
+#234 '='
+#234 STR_CONST "X"
+#234 THEN
+#234 INT_CONST 1
+#234 ELSE
+#234 INT_CONST 0
+#234 FI
+#235 '+'
+#235 IF
+#235 OBJECTID west
+#235 '('
+#235 OBJECTID position
+#235 ')'
+#235 '='
+#235 STR_CONST "X"
+#235 THEN
+#235 INT_CONST 1
+#235 ELSE
+#235 INT_CONST 0
+#235 FI
+#236 '+'
+#236 IF
+#236 OBJECTID northeast
+#236 '('
+#236 OBJECTID position
+#236 ')'
+#236 '='
+#236 STR_CONST "X"
+#236 THEN
+#236 INT_CONST 1
+#236 ELSE
+#236 INT_CONST 0
+#236 FI
+#237 '+'
+#237 IF
+#237 OBJECTID northwest
+#237 '('
+#237 OBJECTID position
+#237 ')'
+#237 '='
+#237 STR_CONST "X"
+#237 THEN
+#237 INT_CONST 1
+#237 ELSE
+#237 INT_CONST 0
+#237 FI
+#238 '+'
+#238 IF
+#238 OBJECTID southeast
+#238 '('
+#238 OBJECTID position
+#238 ')'
+#238 '='
+#238 STR_CONST "X"
+#238 THEN
+#238 INT_CONST 1
+#238 ELSE
+#238 INT_CONST 0
+#238 FI
+#239 '+'
+#239 IF
+#239 OBJECTID southwest
+#239 '('
+#239 OBJECTID position
+#239 ')'
+#239 '='
+#239 STR_CONST "X"
+#239 THEN
+#239 INT_CONST 1
+#239 ELSE
+#239 INT_CONST 0
+#239 FI
+#239 ';'
+#240 '}'
+#241 '}'
+#241 ';'
+#438 ERROR "EOF in comment"
