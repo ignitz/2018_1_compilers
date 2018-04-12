@@ -2,10 +2,9 @@
 
 typedef int Boolean;
 class Entry;
-typedef Entry* Symbol;
+typedef Entry *Symbol;
 
-enum yytokentype
-{
+enum yytokentype {
   CLASS = 258,
   ELSE = 259,
   FI = 260,
@@ -35,8 +34,7 @@ enum yytokentype
   LET_STMT = 285
 };
 
-union YYSTYPE
-{
+union YYSTYPE {
   Boolean boolean;
   Symbol symbol;
   char *error_msg;
