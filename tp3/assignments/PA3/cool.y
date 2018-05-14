@@ -133,41 +133,341 @@
     %type <program> program
     %type <classes> class_list
     %type <class_> class
+    %type <formals> formal_list
+    %type <formals> nonempty_formal_list
+    %type <formal> formal
+    %type <expression> expression
+    %type <expressions> expression_list
+    %type <expressions> nonempty_block
+    %type <cases> case_list
+    %type <case_> branch
+    %type <expression> inner_let
+    %type <expression> nonempty_expr
     
     /* You will want to change the following line. */
-    %type <features> dummy_feature_list
+    // %type <features> dummy_feature_list
+    %type <features> feature_list
+    %type <features> nonempty_feature_list
+    %type <feature> feature
+    %type <expression> while_exp
     
     /* Precedence declarations go here. */
-    
-    
+    %left ASSIGN
+    %left NOT
+    %nonassoc LE '<' '='
+    %left '+' '-'
+    %left '*' '/'
+    %left ISVOID
+    %left '~'
+    %left '@'
+    %left '.'
+
     %%
     /* 
     Save the root of the abstract syntax tree in a global variable.
     */
-    program	: class_list	{ @$ = @1; ast_root = program($1); }
-    ;
+    program	: class_list	{ @$ = @1; ast_root = program($1); };
     
-    class_list
-    : class			/* single class */
-    { $$ = single_Classes($1);
-    parse_results = $$; }
-    | class_list class	/* several classes */
-    { $$ = append_Classes($1,single_Classes($2)); 
-    parse_results = $$; }
-    ;
+    class_list : class			/* single class */
+    {
+      $$ = single_Classes($1);
+      parse_results = $$;
+    }
+    | // OR
+    class_list class	/* several classes */
+    {
+      $$ = append_Classes($1,single_Classes($2)); 
+      parse_results = $$;
+    };
     
     /* If no parent is specified, the class inherits from the Object class. */
-    class	: CLASS TYPEID '{' dummy_feature_list '}' ';'
-    { $$ = class_($2,idtable.add_string("Object"),$4,
-    stringtable.add_string(curr_filename)); }
-    | CLASS TYPEID INHERITS TYPEID '{' dummy_feature_list '}' ';'
-    { $$ = class_($2,$4,$6,stringtable.add_string(curr_filename)); }
-    ;
+    class	: CLASS TYPEID '{' feature_list '}' ';'
+    {
+      $$ = class_($2,idtable.add_string("Object"), $4,
+      stringtable.add_string(curr_filename));
+    }
+    | // OR
+    CLASS TYPEID INHERITS TYPEID '{' feature_list '}' ';'
+    {
+      $$ = class_($2,$4,$6,stringtable.add_string(curr_filename));
+    }
+    | error;
     
     /* Feature list may be empty, but no empty features in list. */
-    dummy_feature_list:		/* empty */
-    {  $$ = nil_Features(); }
-    
+    // dummy_feature_list:		/* empty */
+
+    // list of features
+    feature_list : nonempty_feature_list
+    {
+      $$ = $1;
+    }
+    | // OR
+    {
+      $$ = nil_Features();
+    };
+
+    nonempty_feature_list : feature ';' nonempty_feature_list
+    {
+      $$ = append_Features(single_Features($1), $3);
+    }
+    | // OR
+    feature ';'
+    {
+      $$ = single_Features($1);
+    };
+
+    // feature em si
+    feature: OBJECTID '(' formal_list ')' ':' TYPEID '{' nonempty_expr '}'
+    {
+      $$ = method($1,$3,$6,$8);
+    }
+    | // OR
+    OBJECTID ':' TYPEID
+    {
+      $$ = attr($1,$3, no_expr());
+    }
+    | // OR
+    OBJECTID ':' TYPEID ASSIGN expression
+    {
+      $$ = attr($1,$3,$5);
+    }
+    | error
+    ;
+
+    // list of formals
+    formal_list: nonempty_formal_list
+    {
+      $$ = $1;
+    }
+    | // OR
+    {
+      $$ = nil_Formals();
+    };
+
+    nonempty_formal_list: formal ',' nonempty_formal_list
+    {
+      $$ = append_Formals(single_Formals($1), $3);
+    }
+    | // OR
+    formal
+    {
+      $$ = single_Formals($1);
+    };
+
+    formal : OBJECTID ':' TYPEID
+    {
+      $$ = formal($1,$3);
+    };
+
+    expression_list : expression_list ',' nonempty_expr
+    {
+      $$ = append_Expressions($1, single_Expressions($3));
+    }
+    | // OR
+    nonempty_expr
+    {
+      $$ = single_Expressions($1);
+    }
+    | // OR
+    {
+      $$ = nil_Expressions();
+    };
+
+    nonempty_block : nonempty_expr ';'
+    {
+      $$ = single_Expressions($1);
+    }
+    | // OR
+    nonempty_expr ';' nonempty_block
+    {
+      $$ = append_Expressions(single_Expressions($1), $3);
+    }
+    | error
+    ;
+
+    // conditionals
+
+    case_list : case_list branch ';'
+    {
+      $$ = append_Cases($1, single_Cases($2));
+    }
+    | // OR
+    branch ';'
+    {
+      $$ = single_Cases($1);
+    };
+
+    branch : OBJECTID ':' TYPEID DARROW expression
+    {
+      $$ = branch($1,$3,$5);
+    };
+
+    inner_let : OBJECTID ':' TYPEID ASSIGN expression IN expression
+    {
+      $$ = let($1, $3, $5, $7);
+    }
+    | // OR
+    OBJECTID ':' TYPEID IN expression
+    {
+      $$ = let($1, $3, no_expr(), $5);
+    }
+    | // OR
+    OBJECTID ':' TYPEID ASSIGN expression ',' inner_let
+    {
+      $$ = let($1, $3, $5, $7);
+    }
+    | // OR
+    OBJECTID ':' TYPEID ',' inner_let
+    {
+      $$ = let($1, $3, no_expr(), $5);
+    };
+
+    // exp
+    expression : nonempty_expr
+    {
+      $$ = $1;
+    }
+    | // OR
+    {
+      $$ = no_expr();
+    };
+
+    // non empty
+    nonempty_expr : OBJECTID ASSIGN nonempty_expr
+    {
+      $$ = assign($1, $3);
+    }
+    | // OR
+    nonempty_expr '@' TYPEID '.' OBJECTID '(' expression_list ')'
+    {
+      $$ = static_dispatch($1, $3, $5, $7);
+    }
+    | // OR
+    nonempty_expr '.' OBJECTID '(' expression_list ')'
+    {
+      $$ = dispatch($1, $3, $5);
+    }
+    | //OR
+    OBJECTID '(' expression_list ')'
+    {
+      $$ = dispatch(object(idtable.add_string("self")), $1, $3);
+    }
+    | // OR
+    IF nonempty_expr THEN nonempty_expr ELSE nonempty_expr FI
+    {
+      $$ = cond($2, $4, $6);
+    }
+    | // OR
+    while_exp
+    {
+      $$ = $1;
+    }
+    | // OR
+    '{' nonempty_block '}'
+    {
+      $$ = block($2);
+    }
+    | // OR
+    LET inner_let
+    {
+      $$ = $2;
+    }
+    | // OR
+    CASE nonempty_expr OF case_list ESAC
+    {
+      $$ = typcase($2, $4);
+    }
+    | // OR
+    NEW TYPEID
+    {
+      $$ = new_($2);
+    }
+    | // OR
+    ISVOID nonempty_expr
+    {
+      $$ = isvoid($2);
+    }
+    | // OR
+    nonempty_expr '+' nonempty_expr
+    {
+      $$ = plus($1, $3);
+    }
+    | // OR
+    nonempty_expr '-' nonempty_expr
+    {
+      $$ = sub($1, $3);
+    }
+    | // OR
+    nonempty_expr '*' nonempty_expr
+    {
+      $$ = mul($1, $3);
+    }
+    | // OR
+    nonempty_expr '/' nonempty_expr
+    {
+      $$ = divide($1, $3);
+    }
+    | // OR
+    '~' nonempty_expr
+    {
+      $$ = neg($2);
+    }
+    | // OR
+    nonempty_expr '<' nonempty_expr
+    {
+      $$ = lt($1, $3);
+    }
+    | // OR
+    nonempty_expr LE nonempty_expr
+    {
+      $$ = leq($1, $3);
+    }
+    | // OR
+    nonempty_expr '=' nonempty_expr
+    {
+      $$ = eq($1, $3);
+    }
+    | // OR
+    NOT nonempty_expr
+    {
+      $$ = comp($2);
+    }
+    | // OR
+    '(' nonempty_expr ')'
+    {
+      $$ = $2;
+    }
+    | // OR
+    OBJECTID
+    {
+      $$ = object($1);
+    }
+    | // OR
+    INT_CONST
+    {
+      $$ = int_const($1);
+    }    
+    | // OR
+    STR_CONST
+    {
+      $$ = string_const($1);
+    }
+    | // OR
+    BOOL_CONST
+    {
+      $$ = bool_const($1);
+    }
+    | // OR
+    error
+    { };
+
+    while_exp : WHILE nonempty_expr LOOP expression POOL
+    {
+      $$ = loop($2, $4);
+    }
+    | // OR
+    WHILE nonempty_expr LOOP error // TODO: fix
+    { };
     
     /* end of grammar */
     %%
