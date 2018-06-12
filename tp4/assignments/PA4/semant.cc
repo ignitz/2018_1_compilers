@@ -88,11 +88,13 @@ static void initialize_constants(void)
 
 ClassTable::ClassTable(Classes classes) : semant_errors(0), error_stream(cerr)
 {
+    int i;
 
     install_basic_classes();
-    for (int i = classes->first(); classes->more(i); i = classes->next(i))
-    {
 
+    i = classes->first();
+    while (classes->more(i))
+    {
         if (classes->nth(i)->GetName() == SELF_TYPE)
         {
             semant_error(classes->nth(i)) << "Error! SELF_TYPE redeclared!" << std::endl;
@@ -107,6 +109,7 @@ ClassTable::ClassTable(Classes classes) : semant_errors(0), error_stream(cerr)
             semant_error(classes->nth(i)) << "Error! Class " << classes->nth(i)->GetName() << " has been defined!" << std::endl;
             return;
         }
+        i = classes->next(i);
     }
 
     if (m_classes.find(Main) == m_classes.end())
@@ -114,9 +117,9 @@ ClassTable::ClassTable(Classes classes) : semant_errors(0), error_stream(cerr)
         semant_error() << "Class Main is not defined." << std::endl;
     }
 
-    for (int i = classes->first(); classes->more(i); i = classes->next(i))
+    i = classes->first();
+    while (classes->more(i))
     {
-
         curr_class = classes->nth(i);
 
         Symbol parent_name = curr_class->GetParent();
@@ -142,6 +145,7 @@ ClassTable::ClassTable(Classes classes) : semant_errors(0), error_stream(cerr)
             semant_error(curr_class) << "Error! Cycle inheritance!" << std::endl;
             return;
         }
+        i = classes->next(i);
     }
 }
 
@@ -157,12 +161,13 @@ bool ClassTable::CheckInheritance(Symbol ancestor, Symbol child)
         child = curr_class->GetName();
     }
 
-    for (; child != No_class; child = m_classes.find(child)->second->GetParent())
+    while (child != No_class)
     {
         if (child == ancestor)
         {
             return true;
         }
+        child = m_classes.find(child)->second->GetParent();
     }
     return false;
 }
@@ -176,9 +181,10 @@ std::list<Symbol> ClassTable::GetInheritancePath(Symbol type)
 
     std::list<Symbol> path;
 
-    for (; type != No_class; type = m_classes[type]->GetParent())
+    while (type != No_class)
     {
         path.push_front(type);
+        type = m_classes[type]->GetParent();
     }
 
     return path;
@@ -383,6 +389,7 @@ void attr_class::AddAttribToTable(Symbol class_name)
 
 void method_class::CheckFeatureType()
 {
+    int i;
 
     if (classtable->m_classes.find(return_type) == classtable->m_classes.end() && return_type != SELF_TYPE)
     {
@@ -390,7 +397,9 @@ void method_class::CheckFeatureType()
     }
     attribtable.enterscope();
     std::set<Symbol> used_names;
-    for (int i = formals->first(); formals->more(i); i = formals->next(i))
+
+    i = formals->first();
+    while (formals->more(i))
     {
         Symbol name = formals->nth(i)->GetName();
         if (used_names.find(name) != used_names.end())
@@ -412,6 +421,7 @@ void method_class::CheckFeatureType()
             classtable->semant_error(curr_class) << "Error! self in formal " << std::endl;
         }
         attribtable.addid(formals->nth(i)->GetName(), new Symbol(formals->nth(i)->GetType()));
+        i = formals->next(i);
     }
 
     Symbol expr_type = expr->CheckExprType();
@@ -456,6 +466,8 @@ Symbol assign_class::CheckExprType()
 Symbol static_dispatch_class::CheckExprType()
 {
     bool error = false;
+    int i;
+    std::list<Symbol>::iterator iter;
 
     Symbol expr_class = expr->CheckExprType();
 
@@ -467,13 +479,15 @@ Symbol static_dispatch_class::CheckExprType()
 
     std::list<Symbol> path = classtable->GetInheritancePath(type_name);
     method_class *method = NULL;
-    for (std::list<Symbol>::iterator iter = path.begin(); iter != path.end(); ++iter)
-    {
 
+    iter = path.begin();
+    while (iter != path.end())
+    {
         if ((method = methodtables[*iter].lookup(name)) != NULL)
         {
             break;
         }
+        ++iter;
     }
 
     if (method == NULL)
@@ -482,7 +496,8 @@ Symbol static_dispatch_class::CheckExprType()
         classtable->semant_error(curr_class) << "Error! Cannot find method '" << name << "'" << std::endl;
     }
 
-    for (int i = actual->first(); actual->more(i); i = actual->next(i))
+    i = actual->first();
+    while (actual->more(i))
     {
         Symbol actual_type = actual->nth(i)->CheckExprType();
         if (method != NULL)
@@ -494,6 +509,7 @@ Symbol static_dispatch_class::CheckExprType()
                 error = true;
             }
         }
+        i = actual->next(i);
     }
 
     if (error)
@@ -515,6 +531,8 @@ Symbol static_dispatch_class::CheckExprType()
 Symbol dispatch_class::CheckExprType()
 {
     bool error = false;
+    std::list<Symbol>::iterator iter;
+    int i;
 
     Symbol expr_type = expr->CheckExprType();
 
@@ -529,13 +547,15 @@ Symbol dispatch_class::CheckExprType()
     // We want the definition in a subclass.
     std::list<Symbol> path = classtable->GetInheritancePath(expr_type);
     method_class *method = NULL;
-    for (std::list<Symbol>::iterator iter = path.begin(); iter != path.end(); ++iter)
-    {
 
+    iter = path.begin();
+    while (iter != path.end())
+    {
         if ((method = methodtables[*iter].lookup(name)) != NULL)
         {
             break;
         }
+        ++iter;
     }
 
     if (method == NULL)
@@ -545,7 +565,8 @@ Symbol dispatch_class::CheckExprType()
     }
 
     // Check the params.
-    for (int i = actual->first(); actual->more(i); i = actual->next(i))
+    i = actual->first();
+    while (actual->more(i))
     {
         Symbol actual_type = actual->nth(i)->CheckExprType();
         if (method != NULL)
@@ -557,6 +578,7 @@ Symbol dispatch_class::CheckExprType()
                 error = true;
             }
         }
+        i = actual->next(i);
     }
 
     if (error)
@@ -616,12 +638,14 @@ Symbol typcase_class::CheckExprType()
     std::vector<Symbol> branch_types;
     std::vector<Symbol> branch_type_decls;
 
-    for (int i = cases->first(); cases->more(i); i = cases->next(i))
+    int i = cases->first();
+    while (cases->more(i))
     {
         branch = cases->nth(i);
         Symbol branch_type = branch->CheckBranchType();
         branch_types.push_back(branch_type);
         branch_type_decls.push_back(((branch_class *)branch)->GetTypeDecl());
+        i = cases->next(i);
     }
 
     for (size_t i = 0; i < branch_types.size() - 1; ++i)
@@ -657,9 +681,11 @@ Symbol branch_class::CheckBranchType()
 
 Symbol block_class::CheckExprType()
 {
-    for (int i = body->first(); body->more(i); i = body->next(i))
+    int i = body->first();
+    while (body->more(i))
     {
         type = body->nth(i)->CheckExprType();
+        i = body->next(i);
     }
     return type;
 }
