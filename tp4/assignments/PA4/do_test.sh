@@ -3,44 +3,40 @@ pause() {
 }
 
 ./mysemant test/arith.cl
-pause
+# pause
 ./mysemant test/atoi.cl
-pause
-./mysemant test/atoi_test.cl
-pause
+# pause
 ./mysemant test/bad.cl
-pause
+# pause
 ./mysemant test/book_list.cl
-pause
+# pause
 ./mysemant test/cells.cl
-pause
+# pause
 ./mysemant test/complex.cl
-pause
+# pause
 ./mysemant test/cool.cl
-pause
-./mysemant test/g1.graph
-pause
+# pause
 ./mysemant test/good.cl
-pause
+# pause
 ./mysemant test/graph.cl
-pause
+# pause
 ./mysemant test/hairyscary.cl
-pause
+# pause
 ./mysemant test/hello_world.cl
-pause
+# pause
 ./mysemant test/io.cl
-pause
+# pause
 ./mysemant test/lam.cl
-pause
+# pause
 ./mysemant test/life.cl
-pause
+# pause
 ./mysemant test/list.cl
-pause
+# pause
 ./mysemant test/new_complex.cl
-pause
+# pause
 ./mysemant test/palindrome.cl
-pause
+# pause
 ./mysemant test/primes.cl
-pause
+# pause
 ./mysemant test/sort_list.cl
-pause
+# pause
