@@ -425,10 +425,11 @@ void method_class::CheckFeatureType()
     }
 
     Symbol expr_type = expr->CheckExprType();
-    std::cout << return_type << '\n';
-    std::cout << expr_type << '\n';
+    // std::cout << return_type << '\n';
+    // std::cout << expr_type << '\n';
 
-    if (classtable->CheckInheritance(return_type, expr_type) == false && return_type != SELF_TYPE)
+    // if (classtable->CheckInheritance(return_type, expr_type) == false && return_type != SELF_TYPE)
+    if (classtable->CheckInheritance(return_type, expr_type) == false)
     {
         classtable->semant_error(curr_class) << "Error! return type is not ancestor of expr type. " << std::endl;
     }
